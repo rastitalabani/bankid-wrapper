@@ -1,0 +1,5 @@
+bankid:
+  client:
+    cert_pass: qwerty123
+  adapter:
+    base_url: https://appapi2.test.bankid.com/rp/v5/
