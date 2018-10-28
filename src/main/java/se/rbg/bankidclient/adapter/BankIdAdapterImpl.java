@@ -66,12 +66,13 @@ public class BankIdAdapterImpl implements BankIdAdapter {
       return restTemplate.postForEntity(BASE_URL + "collect", request, CollectResponse.class);
     } catch (HttpClientErrorException hcee) {
       String errorBody = hcee.getResponseBodyAsString();
-
       if (errorBody.contains("No such order"))
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
       else {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
       }
+    } catch (Exception e) {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

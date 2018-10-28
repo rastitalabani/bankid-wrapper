@@ -13,18 +13,23 @@ public class HttpErrorLoggerInterceptor implements Interceptor {
     Request request = chain.request();
     Response response = chain.proceed(request);
 
-    String bodyString = response.body().string();
+    String bodyAsString = response.body().string();
 
-    if (!response.isSuccessful()) {
-      log.error("Unsuccessful HTTP call with cause: {}", bodyString);
-    }
     if (response.isSuccessful()) {
-      log.error("successful with response: {}", bodyString);
+      log.error("successful with response: {}", bodyAsString);
+      if (bodyAsString.contains("failed")) {
+        return new Response.Builder()
+          .code(500)
+          .request(chain.request())
+          .build();
+      }
+    } else {
+      log.error("Unsuccessful HTTP call with cause: {}", bodyAsString);
     }
 
     return response
       .newBuilder()
-      .body(ResponseBody.create(MediaType.parse(""), bodyString))
+      .body(ResponseBody.create(MediaType.parse(""), bodyAsString))
       .build();
   }
 }
